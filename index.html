@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>专属海报</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- 引入样式 -->
+  <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+  <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+  <!-- 引入组件库 -->
+  <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+  <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+  <script src="html2canvas.min.js"></script>
+  <script src="canvas2image.js"></script>
+  <script>
+	if(document.cookie.indexOf("flag=true")==-1){
+        //alert("首次打开！");
+        var t=new Date(new Date().getTime()+1000*60*10);
+        document.cookie="flag=true; expires="+t.toGMTString();
+        location.href='https://q.eqxiu.com/s/DQ5G6U3v'
+    }else{
+        //alert("再次打开！");
+    }	
+  </script>
+</head>
+<body>
+<div class='clf' id="app">
+
+
+  <!--第一种方式-->
+  <div class="absPhoto" v-bind:style="backgroundImage" v-if="curr===1">
+    <a href="javascript:" class="logo"><img src="images/logo.png" alt=""></a>
+    <div class="side_slogan"><img src="images/side_slogan.jpg" alt=""></div>
+    <div class="rightBtns">
+      <a v-if="!save" href="javascript:" class="signature" v-on:click="toEditSign(1)">签名</a>
+      <input v-if="editName" type="text" class="enter_signature" placeholder="输入签名" v-model="name"
+             @blur="saveName">
+      <div v-if="!editName" class="text_signature">{{name}}</div>
+      <!--<a href="javascript:" class="upload" v-on:click="uploadPic">上传</a>-->
+
+
+      <label html-for="sendImage" v-if="!save">
+        <div class="imgupload"><img src="images/icon_upload.png"/>上传</div>
+        <input id="sendImage" type="file" hidden accept="image/*" @change="choosePic"/>
+      </label>
+      <!--<el-upload-->
+      <!--:show-file-list="false"-->
+      <!--accept="image/png,image/gif,image/jpeg"-->
+      <!--action="/haibao/api/upload"-->
+      <!--:on-success="handleExceed">-->
+      <!--<a href="javascript:" class="upload" v-if="!save">上传</a>-->
+      <!--</el-upload>-->
+    </div>
+    <h1 class="absSlogan" v-if="editSign"><input type="text" v-model="sign" @blur="saveInput"/></h1>
+    <!--<h1 class="absSlogan" v-if="!editSign">{{sign}}<br><span>保险语录</span></h1>-->
+    <h1 class="absSlogan" v-if="!editSign" v-html="signFormat" v-on:click="toEditSign(2)"></h1>
+    <!--<input type="text" class="quotations" placeholder="请输入语录">-->
+    <div class="slogan"><img src="images/slogan.png" alt=""></div>
+    <div class="qrcode"><img src="images/qcoder.jpeg" alt=""></div>
+  </div>
+
+
+  <!--第二种方式-->
+  <div class="absPhoto" v-bind:style="backgroundImage" v-if="curr===2">
+    <a href="javascript:" class="logo"><img src="images/logo.png" alt=""></a>
+    <div class="rightBtns">
+      <a v-if="!save" href="javascript:" class="signature" v-on:click="toEditSign(1)">签名</a>
+      <input v-if="editName" type="text" class="enter_signature" placeholder="" v-model="name" @blur="saveName">
+      <div v-if="!editName" class="text_signature">{{name}}</div>
+      <!--<a href="javascript:" class="upload" v-on:click="uploadPic">上传</a>-->
+      <!--<el-upload-->
+      <!--:show-file-list="false"-->
+      <!--accept="image/png,image/gif,image/jpeg"-->
+      <!--action="/api/upload"-->
+      <!--:on-success="handleExceed">-->
+      <!--<a href="javascript:" class="upload" v-if="!save">上传</a>-->
+      <!--</el-upload>-->
+
+      <label html-for="sendImage2" v-if="!save">
+        <div class="imgupload"><img src="images/icon_upload.png"/>上传</div>
+        <input id="sendImage2" type="file" hidden accept="image/*" @change="choosePic"/>
+      </label>
+    </div>
+
+    <div class="absSlogan_2">
+      <a href="#" v-on:click="toEditSign(2)" v-if="!editSign"><span v-html="signFormat"></span></a>
+      <input v-if="editSign" type="text" placeholder="" v-model="sign" @blur="saveInput">
+    </div>
+    <div class="qrcode_2"><img src="images/qcoder.jpeg" alt=""></div>
+  </div>
+
+
+  <div class="absPhoto box" v-if="curr===3">
+    <div class="clf logo">
+      <span class="fl"><img src="images/logo_1.png" alt=""></span>
+      <span class="fr"><img src="images/slogan_2.png" alt=""></span>
+    </div>
+
+    <div class="photo"><img :src="photo" alt=""></div>
+    <div class="btns">
+      <a v-if="!save" href="javascript:" class="signature" v-on:click="toEditSign(1)"><img
+          src="images/icon_signature.png" alt=""><span>签名</span></a>
+      <input v-if="editName" type="text" class="enter_signature" placeholder="输入签名" v-model="name"
+             @blur="saveName">
+      <div v-if="!editName" class="text_signature">{{name}}</div>
+      <!--<el-upload-->
+      <!--:show-file-list="false"-->
+      <!--accept="image/png,image/gif,image/jpeg"-->
+      <!--action="/haibao/api/upload"-->
+      <!--:on-success="handleExceed">-->
+      <!--<a href="#" v-if="!save" class="upload"><img src="images/icon_upload.png" alt=""><span>上传</span></a>-->
+      <!--</el-upload>-->
+
+      <label html-for="sendImage3" v-if="!save">
+        <div class="imgupload"><img src="images/icon_upload.png"/>上传</div>
+        <input id="sendImage3" type="file" hidden accept="image/*" @change="choosePic"/>
+      </label>
+    </div>
+
+    <div class="slogan">
+      <a href="#" v-on:click="toEditSign(2)" v-if="!editSign"><span v-html="signFormat"></span></a>
+      <input v-if="editSign" type="text" placeholder="" v-model="sign" @blur="saveInput">
+    </div>
+    <div class="qrcode"><img src="images/qcoder.jpeg" alt=""></div>
+    <div class="dv_1">
+      <img src="images/slogan_text.png" alt="">
+      <span>平安集团成立三十周年</span>
+    </div>
+  </div>
+
+
+  <!--三种方式共用一组按钮-->
+  <div class="btns">
+    <a href="#" @click="returnAll">编辑</a>
+    <a href="#" @click="saveAll" v-if="!save">保存</a>
+    <a href="#" @click="preview" v-if="save">预览</a>
+  </div>
+
+  <!--点击切换三种方式的按钮-->
+  <div class="arrow" v-if="!save">
+    <a href="javascript:" @click="pre" class="arrowL"><img src="images/arrowL.png" alt=""></a>
+    <a href="javascript:" @click="post" class="arrowR"><img src="images/arrowR.png" alt=""></a>
+  </div>
+
+</div>
+
+<div id="layer"></div>
+<div id="popup" class="popup">
+  <div class="closeBtn"></div>
+  <div class="imgDiv"><img src="images/photo.jpg" id="previewPic"></div>
+  <a href="javascript:" class="saveBtn">长按上方图片保存到手机</a>
+</div>
+
+<script src="index.js?ver=23"></script>
+<script src="jquery.min.js"></script>
+<script>
+
+  var layer = $('#layer');
+  var popup = $('#popup');
+  var closeBtn = $('#popup > .closeBtn');
+
+  function closeFun() {
+    layer.hide();
+    popup.hide();
+  }
+
+  layer.on('click', function () {
+    closeFun();
+  });
+
+  closeBtn.on('click', function () {
+    closeFun();
+  });
+
+
+</script>
+</body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script src="wx.js"></script>
+<script>
+wx.ready(function() {
+	var shareTitle="惠州平安人寿2018年教师节表彰大会";
+	var shareDesc="初心不泯，使命如磐";
+	//var linkUrl="https://q.eqxiu.com/s/DQ5G6U3v";
+	var linkUrl=window.location.href;
+	var imgUrl="http://ceibs.54jj.cn/haibao/images/share.jpeg";
+
+	// 分享给微信好友
+	wx.onMenuShareAppMessage({
+		title:shareTitle,
+		// 分享标题
+		desc:shareDesc,
+		// 分享描述
+		link:linkUrl,
+		// 分享链接
+		imgUrl:imgUrl,
+		// 分享图标
+		// 如果type是music或video，则要提供数据链接，默认为空
+		success: function() {
+			},
+		cancel: function() {
+			// 用户取消分享后执行的回调函数
+		}
+	});
+
+	// 分享到朋友圈
+	wx.onMenuShareTimeline({
+		title:shareTitle,
+		// 分享标题
+		desc:shareDesc,
+		// 分享描述
+		link:linkUrl,
+		// 分享链接
+		imgUrl:imgUrl,
+		// 分享图标
+		type: 'link',
+		// 分享类型,music、video或link，不填默认为link
+		dataUrl: '',
+		// 如果type是music或video，则要提供数据链接，默认为空
+		success: function(res) {
+			},
+		cancel: function(res) {
+			// 用户取消分享后执行的回调函数
+		},
+		fail: function(res) {
+			// 用户取消分享后执行的回调函数
+		}
+	});
+	wx.error(function(res) {
+		// config信息验证失败会执行error函数，如签名过期导致验证失败
+	});
+});
+</script>
+</html>
